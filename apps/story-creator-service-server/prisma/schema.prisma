@@ -1,0 +1,87 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Reader {
+  createdAt    DateTime @default(now())
+  id           String   @id @default(cuid())
+  ratingsGiven String?
+  updatedAt    DateTime @updatedAt
+}
+
+model Story {
+  author        String?
+  chapters      Chapter[]
+  content       String?
+  createdAt     DateTime        @default(now())
+  genre         EnumStoryGenre?
+  id            String          @id @default(cuid())
+  isComplete    Boolean?
+  numberOfPages Int?
+  overview      String?
+  ratings       Int?
+  title         String?
+  updatedAt     DateTime        @updatedAt
+}
+
+model Chapter {
+  comments  Comment[]
+  content   String?
+  createdAt DateTime  @default(now())
+  id        String    @id @default(cuid())
+  overview  String?
+  story     Story?    @relation(fields: [storyId], references: [id])
+  storyId   String?
+  title     String?
+  updatedAt DateTime  @updatedAt
+}
+
+model Comment {
+  author    String?
+  chapter   Chapter? @relation(fields: [chapterId], references: [id])
+  chapterId String?
+  content   String?
+  createdAt DateTime @default(now())
+  id        String   @id @default(cuid())
+  updatedAt DateTime @updatedAt
+}
+
+model User {
+  bio       String?
+  createdAt DateTime @default(now())
+  email     String?  @unique
+  facebook  String?
+  firstName String?
+  id        String   @id @default(cuid())
+  instagram String?
+  lastName  String?
+  linkedin  String?
+  password  String
+  photo     Json?
+  roles     Json
+  tiktok    String?
+  twitter   String?
+  updatedAt DateTime @updatedAt
+  username  String   @unique
+}
+
+model Review {
+  content   String?
+  createdAt DateTime          @default(now())
+  id        String            @id @default(cuid())
+  status    EnumReviewStatus?
+  updatedAt DateTime          @updatedAt
+}
+
+enum EnumStoryGenre {
+  Option1
+}
+
+enum EnumReviewStatus {
+  Option1
+}
